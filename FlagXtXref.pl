@@ -119,6 +119,16 @@ while (<>) {
 		push @opledfile_in, $line;
 		$line = $_;
 		}
+	elsif (/^\\$hmmark (.*?)#/) {
+		my $hmval = $1;
+		if ( (! $hmval) || # 0 or null
+		  ($hmval !~ /^\d+$/) # test integer
+		  ) {
+			s/\\$hmmark/\\${hmmark}bad/;
+			say $ERRFILE qq (Bad homograph number "$hmval" (not a positive integer), changing the SFM on line $.:$_);
+			}
+		 $line .= $_ ;
+		}
 	else { $line .= $_ }
 	}
 push @opledfile_in, $line;
