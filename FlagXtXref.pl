@@ -22,7 +22,7 @@ xrefmarks=lv,cf
 lcmark=lc
 REFflag=REF
 dtmarks=dt,date
-preprocess=s{^\\lf .*?__LS__}{};
+XtXrefEOL=__LS__
 
 =cut
 
@@ -77,11 +77,13 @@ my $hmmark;
 my $srchSEmarks;
 my $srchVAmarks;
 my $lcmark;
+my $xteol;
 if ($config) {
 	$recmark = $config->{"$inisection"}->{recmark};
 	$hmmark = $config->{"$inisection"}->{hmmark};
 	$lcmark = $config->{"$inisection"}->{lcmark};
 	my $semarks = $config->{"$inisection"}->{semarks};
+	 $xteol= $config->{"$inisection"}->{xteol};
 	my $vamarks = $config->{"$inisection"}->{vamarks};
 	$vamarks = "\N{INVERTED QUESTION MARK}\N{INVERTED QUESTION MARK}" if ! $vamarks; # should never match
 	for ($recmark, $hmmark, $lcmark, $semarks,$vamarks) {
@@ -105,6 +107,7 @@ say STDERR "homograph mark:$hmmark" if $debug;
 say STDERR "subentry marks Match: $srchSEmarks" if $debug;
 say STDERR "variant marks Match: $srchVAmarks" if $debug;
 say STDERR "citation mark:$lcmark" if $debug;
+say STDERR "Extra EOL mark:$xteol" if $debug;
 
 # generate array of the input file with one SFM record per line (opl)
 my @opledfile_in;

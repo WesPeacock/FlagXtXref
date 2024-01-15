@@ -2,7 +2,9 @@
 This repo contains scripts to mark the target of Extended cross references.
 
 ### Extended Cross Reference
-An extended cross reference is one where the target has more than just the lx/lc field of the target. Here is an example from Tetun Dili (some fields have been removed from the original). 
+An extended cross reference (xcf) is one where the target has more than just the lx/lc field of the target. Here is an example from Tetun Dili (some fields have been removed from the original). The additional fields within the xcf are separated by a special EOL marker (__LS__ below).
+
+The special EOL marker is included in the .ini file.
 
 ````SFM
 \lx aman
