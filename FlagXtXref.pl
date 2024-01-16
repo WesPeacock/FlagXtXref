@@ -111,7 +111,8 @@ say STDERR "Extra EOL mark:$xteol" if $debug;
 
 # generate array of the input file with one SFM record per line (opl)
 my @opledfile_in;
-my @recordindex;
+my @recordindex;	# line number of the start of the record
+push @recordindex, 1;
 
 my $line = ""; # accumulated SFM record
 my $crlf;
@@ -138,7 +139,6 @@ while (<>) {
 	else { $line .= $_ }
 	}
 push @opledfile_in, $line;
-push @recordindex, $NR;
 
 my $sizeopl = scalar @opledfile_in;
 say STDERR "size opl:", $sizeopl if $debug;
