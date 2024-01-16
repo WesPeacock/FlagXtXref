@@ -140,13 +140,10 @@ while (<>) {
 push @opledfile_in, $line;
 push @recordindex, $NR;
 
-say STDERR "opledfile_in:", Dumper(@opledfile_in) if $debug;
-for my $oplline (@opledfile_in) {
-# Insert code here to perform on each opl'ed line.
-# Note that a next command will prevent the line from printing
+my $sizeopl = scalar @opledfile_in;
+say STDERR "size opl:", $sizeopl if $debug;
 
-say STDERR "oplline:", Dumper($oplline) if $debug;
-#de_opl this line
+#say STDERR @opledfile_in if $debug;
 say STDERR "size index:", scalar @recordindex  if $debug;
 print STDERR Dumper(@recordindex) if $debug;
 
