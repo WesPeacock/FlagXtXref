@@ -149,7 +149,6 @@ print STDERR Dumper(@recordindex) if $debug;
 
 for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 	my $oplline = $opledfile_in[$oplindex];
-	next if ! ($oplline =~  m/\\$recmark /); # e.g. Shoebox header line
 	say STDERR "oplline:", Dumper($oplline) if $debug;
 	#de_opl this line
 	for ($oplline) {
