@@ -111,6 +111,8 @@ say STDERR "Extra EOL mark:$xteol" if $debug;
 
 # generate array of the input file with one SFM record per line (opl)
 my @opledfile_in;
+my @recordindex;
+
 my $line = ""; # accumulated SFM record
 my $crlf;
 while (<>) {
@@ -120,6 +122,7 @@ while (<>) {
 	if (/^\\$recmark /) {
 		$line =~ s/$eolrep$/$crlf/;
 		push @opledfile_in, $line;
+		push @recordindex, $NR;
 		$line = $_;
 		}
 	elsif (/^\\$hmmark (.*?)#/) {
@@ -135,6 +138,7 @@ while (<>) {
 	else { $line .= $_ }
 	}
 push @opledfile_in, $line;
+push @recordindex, $NR;
 
 say STDERR "opledfile_in:", Dumper(@opledfile_in) if $debug;
 for my $oplline (@opledfile_in) {
@@ -143,6 +147,9 @@ for my $oplline (@opledfile_in) {
 
 say STDERR "oplline:", Dumper($oplline) if $debug;
 #de_opl this line
+say STDERR "size index:", scalar @recordindex  if $debug;
+print STDERR Dumper(@recordindex) if $debug;
+
 	for ($oplline) {
 		$crlf=$MATCH if /\R/;
 		s/$eolrep/$crlf/g;
