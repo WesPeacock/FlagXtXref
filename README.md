@@ -23,3 +23,6 @@ The special EOL marker is included in the .ini file.
 \cf karau aman__LS__\ce bull
 \cf kuda aman__LS__\ce stallion
 ````
+
+## To Do
+- keep track of the original line numbers of the start of the records (i.e. EOL + previous special EOLs
