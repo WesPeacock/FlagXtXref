@@ -22,7 +22,8 @@ xrefmarks=lv,cf
 lcmark=lc
 REFflag=REF
 dtmarks=dt,date
-XtXrefEOL=__LS__
+xteol=__LS__
+
 
 =cut
 
@@ -75,29 +76,25 @@ my $config = Config::Tiny->read($inifilename, 'crlf');
 
 my $hmmark;
 my $srchSEmarks;
-my $srchVAmarks;
 my $lcmark;
 my $xteol;
 if ($config) {
 	$recmark = $config->{"$inisection"}->{recmark};
 	$hmmark = $config->{"$inisection"}->{hmmark};
-	$lcmark = $config->{"$inisection"}->{lcmark};
 	my $semarks = $config->{"$inisection"}->{semarks};
+	$lcmark = $config->{"$inisection"}->{lcmark};
 	 $xteol= $config->{"$inisection"}->{xteol};
-	my $vamarks = $config->{"$inisection"}->{vamarks};
-	$vamarks = "\N{INVERTED QUESTION MARK}\N{INVERTED QUESTION MARK}" if ! $vamarks; # should never match
-	for ($recmark, $hmmark, $lcmark, $semarks,$vamarks) {
+	for ($recmark, $hmmark, $lcmark, $semarks) {
 		# remove backslashes and spaces from the SFMs in the INI file
 		say STDERR $_ if $debug;
 		s/\\//g;
 		s/ //g;
 		}
-	for ($semarks, $vamarks) {
+	for ($semarks) {
 		s/\,*$//; # no trailing commas
 		s/\,/\|/g;  # use bars for or'ing
 		}
 	$srchSEmarks = qr/$semarks/;
-	$srchVAmarks = qr/$vamarks/;
 	}
 else {
 	die  "Couldn't find the INI file: $inifilename\n";
@@ -105,7 +102,6 @@ else {
 say STDERR "record mark:$recmark" if $debug;
 say STDERR "homograph mark:$hmmark" if $debug;
 say STDERR "subentry marks Match: $srchSEmarks" if $debug;
-say STDERR "variant marks Match: $srchVAmarks" if $debug;
 say STDERR "citation mark:$lcmark" if $debug;
 say STDERR "Extra EOL mark:$xteol" if $debug;
 
