@@ -17,7 +17,8 @@ The special EOL marker is included in the .ini file.
 \gr macho (m) ; masculino (m)
 \dr macho (m) (animal), masculino (m) (ai horis)
 
-\lf CPart__LS__\lv inan__LS__\le female (animal)
+\lf CPart
+\lv inan__LS__\le female (animal)
 \cf busa aman__LS__\ce tomcat
 \cf karau aman__LS__\ce bull
 \cf kuda aman__LS__\ce stallion
