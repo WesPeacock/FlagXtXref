@@ -141,7 +141,27 @@ say STDERR "size opl:", $sizeopl if $debug;
 
 #print STDERR Dumper(@opledfile_in) if $debug;
 say STDERR "size index:", scalar @recordindex  if $debug;
-print STDERR Dumper(@recordindex) if $debug;
+#print STDERR Dumper(@recordindex) if $debug;
+
+my %lxlocation;	# contains the index(es) of a lexical item in the opl array
+
+for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
+	my $oplline = $opledfile_in[$oplindex];
+	next if ! ($oplline =~  m/\\$recmark ([^#]*)/); # e.g. Shoebox header line
+	my $lxkey =  $1;
+	if ($oplline =~  m/\\$lcmark ([^#]*)/) {
+		$lxkey =  $1;
+		}
+	say STDERR "lxkey(maybe citation):", $lxkey if $debug;
+	if (exists $lxlocation{$lxkey}) {
+		say $ERRFILE qq/record "$lxkey" on line $recordindex[$oplindex] is also on line(s) $lxlocation{$lxkey}/;
+		$lxlocation{$lxkey} = $lxlocation{$lxkey} . "," . $recordindex[$oplindex];
+		}
+	else {
+		$lxlocation{$lxkey} = $recordindex[$oplindex];
+		}
+	}
+
 
 for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 	my $oplline = $opledfile_in[$oplindex];
