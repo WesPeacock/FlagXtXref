@@ -5,12 +5,11 @@ my $USAGE = "Usage: $0 [--inifile inifile.ini] [--section FlagXtXref] [--logfile
 This script checks extended cross references.
 An extended cross reference is one where the target has more than just the lx/lc field of the target.
 It flags them as to the existence and status of the target:
-Missing in the lc/lx/se fields
-Ambiguous (Found but could be one of multiple homographs)
-Missing in lc/lx/se but
-found in another cf/lv – need to resolve.
-not found
-Found in a single – need to resolve/add to the other entry.
+1) Missing in the lc/lx/se fields
+2) Ambiguous (Found but could be one of multiple homographs)
+3) Missing in lc/lx/se but found in another cf/lv – need to resolve.
+4) not found
+5) Found in a single – need to resolve/add to the other entry.
 
 
 The ini file should have sections with syntax like this:
