@@ -174,3 +174,4 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 		print;
 		}
 	}
+print STDERR Dumper(@recordindex) if $debug;
