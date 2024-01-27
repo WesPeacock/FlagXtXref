@@ -11,9 +11,26 @@ It flags them as to the existence and status of the target:
 4) not found
 5) Found in a single – need to resolve/add to the other entry.
 
+## Data Structures Used
+- @opledfile_in - an array with the each SFM record as a separate item
+	- The first item may be Toolbox header
+- @recordindex - an array of the line numbers of the SFM records
+ - %lxlocation - A hash of the database keyed on the text of the lx/lc field.
+	- The value of the hash is a comma separated list of matching records
+		- the record#<tab>homograph#
+For example:
+If the 14th SFM record starts on line# 300 and is:
+	\lx olemay
+	\hm 2
+	\et Old English: mal
+	\ps n
+	\ge mole
+	\de a small dark skin blemish
 
-
-
+Then:
+	$opledfile_in[13] = "\lx olemay#\hm 2#\et Old English: mal#\ps n#\ge mole#\de a small dark skin blemish##"
+	$recordindex[13] = 300
+	$lxlocation{"olemay"} is a string that lists the indexes and homographs of "olemay"; it contains "13<tab>2"
 =cut
 
 use 5.020;
@@ -133,7 +150,6 @@ say STDERR "size index:", scalar @recordindex  if $debug;
 #print STDERR Dumper(@recordindex) if $debug;
 
 my %lxlocation;	# contains the index(es) of a lexical item in the opl array
-
 for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 	my $oplline = $opledfile_in[$oplindex];
 	next if ! ($oplline =~  m/\\$recmark ([^#]*)/); # e.g. Shoebox header line
@@ -143,13 +159,19 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 		}
 	say STDERR "lxkey(maybe citation):", $lxkey if $debug;
 	if (exists $lxlocation{$lxkey}) {
-		say $ERRFILE qq/record "$lxkey" on line $recordindex[$oplindex] is also on line(s) $lxlocation{$lxkey}/;
-		$lxlocation{$lxkey} = $lxlocation{$lxkey} . "," . $recordindex[$oplindex];
+		print $ERRFILE qq/record "$lxkey" on line $recordindex[$oplindex] is also on line(s) /;
+		my @rindxs;
+		for my $i (split ( /,/, $lxlocation{$lxkey})) {
+			push @rindxs, $recordindex[$i];
+			}
+		say $ERRFILE join (", ", @rindxs);
+		$lxlocation{$lxkey} = $lxlocation{$lxkey} . "," . $oplindex;
 		}
 	else {
-		$lxlocation{$lxkey} = $recordindex[$oplindex];
+		$lxlocation{$lxkey} = $oplindex;
 		}
 	}
+print STDERR "lxlocation:\n" . Dumper(%lxlocation) if $debug;
 
 
 for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
@@ -163,4 +185,9 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 		print;
 		}
 	}
-print STDERR Dumper(@recordindex) if $debug;
+# print STDERR Dumper(@recordindex) if $debug;
+say STDERR "opledfile_in[13]:$opledfile_in[13]";
+say STDERR "recordindex[13]:$recordindex[13]";
+my $x = $lxlocation{"olemay"};
+say STDERR qq{lxlocation{"olemay"}:$x};
+
