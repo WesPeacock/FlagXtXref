@@ -12,16 +12,6 @@ It flags them as to the existence and status of the target:
 5) Found in a single – need to resolve/add to the other entry.
 
 
-The ini file should have sections with syntax like this:
-[FlagXtXref]
-recmark=lx
-hmmark=hm
-semarks=se,sec,sed,sei,sep,sesec,sesed,sesep,seses
-xrefmarks=lv,cf
-lcmark=lc
-REFflag=REF
-dtmarks=dt,date
-xteol=__LS__
 
 
 =cut

@@ -23,6 +23,19 @@ The special EOL marker is included in the .ini file.
 \cf karau aman__LS__\ce bull
 \cf kuda aman__LS__\ce stallion
 ````
+## The INI file
+The ini file should have sections with syntax like this:
+````INI
+[FlagXtXref]
+recmark=lx
+hmmark=hm
+semarks=se,sec,sed,sei,sep,sesec,sesed,sesep,seses
+xrefmarks=lv,cf
+lcmark=lc
+REFflag=REF
+dtmarks=dt,date
+xteol=__LS__
+````
 
 ## To Do
 - keep track of the original line numbers of the start of the records (i.e. EOL + previous special EOLs
