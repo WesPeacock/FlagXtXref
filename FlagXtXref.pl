@@ -185,9 +185,3 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 		print;
 		}
 	}
-# print STDERR Dumper(@recordindex) if $debug;
-say STDERR "opledfile_in[13]:$opledfile_in[13]";
-say STDERR "recordindex[13]:$recordindex[13]";
-my $x = $xreftarget{"olemay"};
-say STDERR qq{xreftarget{"olemay"}:$x};
-
