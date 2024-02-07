@@ -16,8 +16,8 @@ It flags them as to the existence and status of the target:
 	- The first item may be Toolbox header
 - @recordindex - an array of the line numbers of the SFM records
  - %xreftarget - A hash of the database keyed on the text of the lx/lc field.
-	- The value of the hash is a comma separated list of matching records
-		- the record#<tab>homograph#
+	- The value of the hash is a comma separated list of matching items
+		- For main entries:the record#<tab>homograph#<tab>M
 For example:
 If the 14th SFM record starts on line# 300 and is:
 	\lx olemay
@@ -157,6 +157,12 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 	if ($oplline =~  m/\\$lcmark ([^#]*)/) {
 		$lxkey =  $1;
 		}
+	my $hmno ="";
+	$oplline =~  m/^([^#]+#){1,4}/; # first (up to) 4 fields
+	my $hmcheck = $MATCH;
+	if ($hmcheck =~ m/\\$hmmark ([^#]*)/) {
+		$hmno =$1;
+		}
 	say STDERR "lxkey(maybe citation):", $lxkey if $debug;
 	if (exists $xreftarget{$lxkey}) {
 		print $ERRFILE qq/record "$lxkey" on line $recordindex[$oplindex] is also on line(s) /;
@@ -166,9 +172,10 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 			}
 		say $ERRFILE join (", ", @rindxs);
 		$xreftarget{$lxkey} = $xreftarget{$lxkey} . "," . $oplindex;
+		$xreftarget{$lxkey} = $xreftarget{$lxkey} . "," . "$oplindex\t$hmno\tM";
 		}
 	else {
-		$xreftarget{$lxkey} = $oplindex;
+		$xreftarget{$lxkey} = "$oplindex\t$hmno\tM";
 		}
 	}
 print STDERR "xreftarget:\n" . Dumper(%xreftarget) if $debug;
@@ -185,3 +192,15 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 		print;
 		}
 	}
+
+=pod
+		# && ($xreftarget{$lxkey} =~ m/\t$hmno(,|$)/)) {
+		print $ERRFILE qq/record "$lxkey" on line $recordindex[$oplindex] is also on line(s) /;
+		my @rindxs;
+		for my $i (split ( /,/, $xreftarget{$lxkey})) {
+			$i =~  m/[^\t]*/; # remove homograph number
+			push @rindxs, $recordindex[$MATCH];
+			}
+		say $ERRFILE join (", ", @rindxs);
+
+=cut
