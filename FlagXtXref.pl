@@ -165,13 +165,6 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 		}
 	say STDERR "lxkey(maybe citation):", $lxkey if $debug;
 	if (exists $xreftarget{$lxkey}) {
-		print $ERRFILE qq/record "$lxkey" on line $recordindex[$oplindex] is also on line(s) /;
-		my @rindxs;
-		for my $i (split ( /,/, $xreftarget{$lxkey})) {
-			push @rindxs, $recordindex[$i];
-			}
-		say $ERRFILE join (", ", @rindxs);
-		$xreftarget{$lxkey} = $xreftarget{$lxkey} . "," . $oplindex;
 		$xreftarget{$lxkey} = $xreftarget{$lxkey} . "," . "$oplindex\t$hmno\tM";
 		}
 	else {
