@@ -83,25 +83,28 @@ my $config = Config::Tiny->read($inifilename, 'crlf');
 
 my $hmmark;
 my $srchSEmarks;
+my $srchXREFmarks;
 my $lcmark;
 my $xteol;
 if ($config) {
 	$recmark = $config->{"$inisection"}->{recmark};
 	$hmmark = $config->{"$inisection"}->{hmmark};
 	my $semarks = $config->{"$inisection"}->{semarks};
+	my $xrefmarks = $config->{"$inisection"}->{xrefmarks};
 	$lcmark = $config->{"$inisection"}->{lcmark};
 	 $xteol= $config->{"$inisection"}->{xteol};
-	for ($recmark, $hmmark, $lcmark, $semarks) {
+	for ($recmark, $hmmark, $lcmark, $semarks, $xrefmarks) {
 		# remove backslashes and spaces from the SFMs in the INI file
 		say STDERR $_ if $debug;
 		s/\\//g;
 		s/ //g;
 		}
-	for ($semarks) {
+	for ($semarks, $xrefmarks) {
 		s/\,*$//; # no trailing commas
 		s/\,/\|/g;  # use bars for or'ing
 		}
 	$srchSEmarks = qr/$semarks/;
+	$srchXREFmarks = qr/$xrefmarks/;
 	}
 else {
 	die  "Couldn't find the INI file: $inifilename\n";
