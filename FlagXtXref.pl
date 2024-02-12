@@ -18,6 +18,7 @@ It flags them as to the existence and status of the target:
  - %xreftarget - A hash of the database keyed on the text of the lx/lc field.
 	- The value of the hash is a comma separated list of matching items
 		- For main entries:the record#<tab>homograph#<tab>M
+		- For subentries:the record#<tab>homograph#<tab>S:line#inrecord
 For example:
 If the 14th SFM record starts on line# 300 and is:
 	\lx olemay
@@ -169,6 +170,25 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 		}
 	else {
 		$xreftarget{$lxkey} = "$oplindex\t$hmno\tM";
+		}
+	while ($oplline =~ /\\$srchSEmarks ([^$eolrep]+)$eolrep/g) {
+		my $sekey=$1;
+		my $beforefields=$PREMATCH;
+		my $afterfields=$POSTMATCH;
+		my $hmno ="";
+		$afterfields =~  m/^([^#]+#){1,4}/; # (up to) 4 fields following the \se marker
+		my $hmcheck = $MATCH;
+		if ($hmcheck =~ m/\\$hmmark ([^#]*)/) {
+			$hmno =$1;
+			}
+#		say STDERR "sekey=$sekey\nbeforefields=$beforefields\nafterfields=$afterfields\nhmcheck=$hmcheck" if $debug;
+		my $linecount = () = $beforefields =~ /$eolrep/g; # HT:https://stackoverflow.com/questions/1849329/is-there-a-perl-shortcut-to-count-the-number-of-matches-in-a-string/1849356?r=Saves_UserSavesList#1849356
+		if (exists $xreftarget{$sekey}) {
+			$xreftarget{$sekey} = $xreftarget{$sekey} . "," . "$oplindex\t$hmno\tS\:$linecount";
+			}
+		else {
+			$xreftarget{$sekey} = "$oplindex\t$hmno\tS\:$linecount";
+			}
 		}
 	}
 print STDERR "xreftarget:\n" . Dumper(%xreftarget) if $debug;
