@@ -157,6 +157,8 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 	my $lxkey =  $1;
 	if ($oplline =~  m/\\$lcmark ([^#]*)/) {
 		$lxkey =  $1;
+		my $beforefields = $PREMATCH;
+		$linecount = () = $beforefields =~ /$eolrep/g; # HT:https://stackoverflow.com/a/1849356/
 		}
 	my $hmno ="";
 	$oplline =~  m/^([^#]+#){1,4}/; # first (up to) 4 fields
@@ -182,7 +184,7 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 			$hmno =$1;
 			}
 #		say STDERR "sekey=$sekey\nbeforefields=$beforefields\nafterfields=$afterfields\nhmcheck=$hmcheck" if $debug;
-		my $linecount = () = $beforefields =~ /$eolrep/g; # HT:https://stackoverflow.com/questions/1849329/is-there-a-perl-shortcut-to-count-the-number-of-matches-in-a-string/1849356?r=Saves_UserSavesList#1849356
+		my $linecount = () = $beforefields =~ /$eolrep/g; # HT:https://stackoverflow.com/a/1849356/
 		if (exists $xreftarget{$sekey}) {
 			$xreftarget{$sekey} = $xreftarget{$sekey} . "," . "$oplindex\t$hmno\tS\:$linecount";
 			}
