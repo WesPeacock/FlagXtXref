@@ -15,10 +15,10 @@ It flags them as to the existence and status of the target:
 - @opledfile_in - an array with the each SFM record as a separate item
 	- The first item may be Toolbox header
 - @recordindex - an array of the line numbers of the SFM records
- - %xreftarget - A hash of the database keyed on the text of the lx/lc field.
+ - %xreftarget - A hash of the database keyed on the text of the lx/lc or /se* field.
 	- The value of the hash is a comma separated list of matching items
-		- For main entries:the record#<tab>homograph#<tab>M
-		- For subentries:the record#<tab>homograph#<tab>S:line#inrecord
+		- homographno<tab>recordno<tab>linenoinrecord
+		- the linenoinrecord is 0 for \lx targets; the line offset for \lc and \se*
 For example:
 If the 14th SFM record starts on line# 300 and is:
 	\lx olemay
@@ -31,7 +31,7 @@ If the 14th SFM record starts on line# 300 and is:
 Then:
 	$opledfile_in[13] = "\lx olemay#\hm 2#\et Old English: mal#\ps n#\ge mole#\de a small dark skin blemish##"
 	$recordindex[13] = 300
-	$xreftarget{"olemay"} is a string that lists the indexes and homographs of "olemay"; it contains "13<tab>2"
+	$xreftarget{"olemay"} is a string that lists the homographs and indexes of "olemay"; it contains "2<tab>13<tab>0"
 =cut
 
 use 5.020;
@@ -158,6 +158,7 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 	my $oplline = $opledfile_in[$oplindex];
 	next if ! ($oplline =~  m/\\$recmark ([^#]*)/); # e.g. Shoebox header line
 	my $lxkey =  $1;
+	my $linecount = 0;
 	if ($oplline =~  m/\\$lcmark ([^#]*)/) {
 		$lxkey =  $1;
 		my $beforefields = $PREMATCH;
@@ -171,10 +172,10 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 		}
 	say STDERR "lxkey(maybe citation):", $lxkey if $debug;
 	if (exists $xreftarget{$lxkey}) {
-		$xreftarget{$lxkey} = $xreftarget{$lxkey} . "," . "$oplindex\t$hmno\tM";
+		$xreftarget{$lxkey} = $xreftarget{$lxkey} . "," . "$hmno\t$oplindex\t$linecount";
 		}
 	else {
-		$xreftarget{$lxkey} = "$oplindex\t$hmno\tM";
+		$xreftarget{$lxkey} = "$hmno\t$oplindex\t$linecount";
 		}
 	while ($oplline =~ /\\$srchSEmarks ([^$eolrep]+)$eolrep/g) {
 		my $sekey=$1;
@@ -189,10 +190,10 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 #		say STDERR "sekey=$sekey\nbeforefields=$beforefields\nafterfields=$afterfields\nhmcheck=$hmcheck" if $debug;
 		my $linecount = () = $beforefields =~ /$eolrep/g; # HT:https://stackoverflow.com/a/1849356/
 		if (exists $xreftarget{$sekey}) {
-			$xreftarget{$sekey} = $xreftarget{$sekey} . "," . "$oplindex\t$hmno\tS\:$linecount";
+			$xreftarget{$sekey} = $xreftarget{$sekey} . "," . "$hmno\t$oplindex\t$linecount";
 			}
 		else {
-			$xreftarget{$sekey} = "$oplindex\t$hmno\tS\:$linecount";
+			$xreftarget{$sekey} = "$hmno\t$oplindex\t$linecount";
 			}
 		}
 	}
