@@ -199,6 +199,34 @@ for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 	}
 print STDERR "xreftarget:\n" . Dumper(%xreftarget) if $debug;
 
+foreach my $targetkey ( sort keys %xreftarget) {
+	my @hmvals = split(/,/, $xreftarget{$targetkey});
+	my @hmnos;
+	foreach (@hmvals) {
+		(my $hmno) = split/\t/;
+		push @hmnos, $hmno;
+		}
+	# check for duplicate hmnos HT:https://stackoverflow.com/a/3012127
+	my %seen; #  a count of the number of times each hmno is seen
+	foreach my $hmno (@hmnos) {
+		next unless $seen{$hmno}++;
+		}
+	foreach my $seenkey (keys %seen) { # Flag duplicates
+		if ($seen{$seenkey} > 1) {
+			 if (! $seenkey) { # not null
+				say $ERRFILE qq[Entries for "$targetkey" are duplicated with no homograph#];
+				 }
+			else {
+				 say $ERRFILE qq[Entries for "$targetkey" have duplicate homograph #$seenkey];
+				}
+			foreach my $hmdupe (grep (/^$seenkey\t/, @hmvals)) {
+				(undef, my $recno, my $lineno) =  split(/\t/, $hmdupe);
+				say $ERRFILE "At line " , ($recordindex[$recno]+ $lineno);
+				}
+			say $ERRFILE "";
+			}
+		}
+	}
 
 for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 	my $oplline = $opledfile_in[$oplindex];
