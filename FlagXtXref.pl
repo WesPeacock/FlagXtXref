@@ -226,6 +226,25 @@ foreach my $targetkey ( sort keys %xreftarget) {
 			say $ERRFILE "";
 			}
 		}
+	if (grep (/^\t/, @hmvals) && grep (/^[^\t]/, @hmvals)) { # flag duplicate entries with no hm#
+		print $ERRFILE qq[Entries for "$targetkey" have unmarked homograph(s) at lines: ];
+		my $linenos = "";
+		foreach my $nohm (sort grep (/^\t/, @hmvals)) {
+			(undef, my $recno, my $lineno) =  split(/\t/, $nohm);
+			$linenos = $linenos . ($recordindex[$recno]+ $lineno) . ", ";
+			}
+		$linenos =~ s/, $//;
+		say $ERRFILE $linenos;
+		$linenos = "";
+		print $ERRFILE qq[and homograph number(s) at line(s) (line#:hm#): ];
+		foreach my $hmrec (sort grep (/^[^\t]/, @hmvals)) {
+			(my $hmno, my $recno, my $lineno) =  split(/\t/, $hmrec);
+			$linenos = $linenos . "\(" . ($recordindex[$recno]+ $lineno) . ":$hmno\), ";
+			}
+		$linenos =~ s/, $//;
+		say $ERRFILE $linenos;
+		say $ERRFILE "";
+		}
 	}
 
 for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
