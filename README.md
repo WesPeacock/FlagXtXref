@@ -41,4 +41,4 @@ xteol=__LS__
 The homograph field of the main entry must be one of the first four fields. Homograph markers outside that range are considered to be contained in a subentry.
 
 ## To Do
-- keep track of the original line numbers of the start of the records (i.e. EOL + previous special EOLs
+- Keep track of the original line numbers of the start of the records (i.e. EOL + previous special EOLs.
