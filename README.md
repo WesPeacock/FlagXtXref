@@ -36,6 +36,16 @@ REFflag=REF
 dtmarks=dt,date
 xteol=__LS__
 ````
+## Targets of Cross References
+Valid targets of cross references are stored.
+For each target, its homographs and their locations are tracked. 
+## Checks on Targets of Cross References
+The lexical file is processed for valid targets of cross references.
+Targets can be duplicated as long as they have different homograph markers.
+Error messages are logged to the error file when the following ambiguities are detected:
+- Duplicate targets with no homograph markers
+- Duplicate targets with identical homograph markers
+- Duplicate targets some with homograph markers others without.
 
 ## Restrictions on \\hm fields
 The homograph field of the main entry must be one of the first four fields. Homograph markers outside that range are considered to be contained in a subentry.
