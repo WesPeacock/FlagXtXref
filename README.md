@@ -52,3 +52,5 @@ The homograph field of the main entry must be one of the first four fields. Homo
 
 ## To Do
 - Keep track of the original line numbers of the start of the records (i.e. EOL + previous special EOLs).
+- Some of the code assumes that the eol replacement string in the internal opl is a single character. It shouldn't. This may be a problem that can be ignored.
+ - If any of the targets or xrefs contain the eol replacement string, It will be replaced in the error and log files. E.g. "this#word" would be logged or flagged as "this__hash__word". This may be a problem that can be ignored.
