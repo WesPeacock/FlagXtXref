@@ -209,7 +209,7 @@ foreach my $targetkey ( sort keys %xreftarget) {
 	# check for duplicate hmnos HT:https://stackoverflow.com/a/3012127
 	my %seen; #  a count of the number of times each hmno is seen
 	foreach my $hmno (@hmnos) {
-		next unless $seen{$hmno}++;
+		$seen{$hmno}++;
 		}
 	foreach my $seenkey (keys %seen) { # Flag duplicates
 		if ($seen{$seenkey} > 1) {
