@@ -249,6 +249,27 @@ foreach my $targetkey ( sort keys %xreftarget) {
 
 for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
 	my $oplline = $opledfile_in[$oplindex];
+	while ($oplline =~ /(\\$srchXREFmarks) ([^$eolrep]+)$eolrep/g) {
+		my $xrefmarker = $1;
+		my $xreftxt=$2;
+		my $beforefields=$PREMATCH;
+		my $linecount = () = $beforefields =~ /$eolrep/g;
+		$linecount =$linecount + $recordindex[$oplindex]+ $linecount;
+		$xreftxt =~ s/\d+$//;
+		my $hmno = $MATCH;
+		# detect no match on xreftxt
+		if (! exists $xreftarget{$xreftxt}) {
+			say $ERRFILE qq[No target found for "$xrefmarker $xreftxt" on line# $linecount];
+			next;
+			}
+		# detect match on text but not homograph
+		# match with homograph -> to logfile
+		# exclude text from $xteol to $eolrep
+		}
+	}
+
+for (my $oplindex=0; $oplindex < $sizeopl; $oplindex++) {
+	my $oplline = $opledfile_in[$oplindex];
 	say STDERR "oplline:", Dumper($oplline) if $debug;
 	#de_opl this line
 	for ($oplline) {
