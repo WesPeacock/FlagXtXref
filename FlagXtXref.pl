@@ -19,7 +19,7 @@ It flags them as to the existence and status of the target:
 	- The value of the hash is a comma separated list of matching items
 		- homographno<tab>recordno<tab>linenoinrecord
 		- the linenoinrecord is 0 for \lx targets; the line offset for \lc and \se*
-For example:
+For example (taken from https://github.com/WesPeacock/SampleSFM/blob/master/earBayullBayoleMay.db):
 If the 14th SFM record starts on line# 300 and is:
 	\lx olemay
 	\hm 2
@@ -27,11 +27,15 @@ If the 14th SFM record starts on line# 300 and is:
 	\ps n
 	\ge mole
 	\de a small dark skin blemish
-
 Then:
 	$opledfile_in[13] = "\lx olemay#\hm 2#\et Old English: mal#\ps n#\ge mole#\de a small dark skin blemish##"
 	$recordindex[13] = 300
 	$xreftarget{"olemay"} is a string that lists the homographs and indexes of "olemay"; it contains "2<tab>13<tab>0"
+	E.g. if you add the following to the end of the script, and run the script on
+	my $x = $xreftarget{"olemay"};
+		say STDERR qq{xreftarget{"olemay"}:$x};
+	 This will be the output on STDERR:
+		xreftarget{"olemay"}:1  12  0,2 13  0,3 14  0,4 15  0
 =cut
 
 use 5.020;
